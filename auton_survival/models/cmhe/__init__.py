@@ -242,6 +242,8 @@ class DeepCoxMixturesHeterogenousEffects:
                       "model using the `fit` method on some training data " +
                       "before calling `predict_risk`.")
 
+
+
   def predict_survival(self, x, a, t=None):
     r"""Returns the estimated survival probability at time \( t \),
       \( \widehat{\mathbb{P}}(T > t|X) \) for some input data \( x \).
@@ -275,7 +277,16 @@ class DeepCoxMixturesHeterogenousEffects:
 
   def predict_latent_z(self, x):
 
-    r"""Returns the estimated latent base survival group \( z \) given the confounders \( x \)."""
+    r"""Returns the estimated latent base survival group \( z \) given the confounders \( x \).
+    
+    Parameters
+    ----------
+    x: np.ndarray
+        A numpy array of the input features, \( x \).
+    
+    Returns:
+      np.array: numpy array of the latent base survival phenotypes \( z \) for each data point.
+    """
 
     x = self._preprocess_test_data(x)
 
@@ -289,7 +300,16 @@ class DeepCoxMixturesHeterogenousEffects:
 
   def predict_latent_phi(self, x):
 
-    r"""Returns the estimated latent treatment effect group \( \phi \) given the confounders \( x \)."""
+    r"""Returns the estimated latent treatment effect group \( \phi \) given the confounders \( x \).
+
+    Parameters
+    ----------
+    x: np.ndarray
+        A numpy array of the input features, \( x \).
+    
+    Returns:
+      np.array: numpy array of the latent treatment effect group \( \phi \) for each data point.
+    """
 
     x = self._preprocess_test_data(x)
 
