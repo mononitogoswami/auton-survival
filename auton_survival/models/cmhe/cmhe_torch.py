@@ -21,6 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+import sys
+sys.path.append(r'../')
+
 import torch
 from dsm.dsm_torch import create_representation
 
