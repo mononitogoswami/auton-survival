@@ -136,6 +136,16 @@ class DeepCoxMixturesHeterogenousEffects:
     else:
       return torch.from_numpy(x).float()
 
+  def _get_valid_idx(n, size, random_seed):
+
+    np.random.seed(random_seed)
+
+    validx = sorted(np.random.choice(n, size=(int(size*n)), replace=False))
+    vidx = np.zeros(n).astype('bool')
+    vidx[validx] = True
+
+    return vidx
+
   def _preprocess_training_data(self, x, t, e, a, vsize, val_data,
                                 random_state):
 
@@ -153,13 +163,18 @@ class DeepCoxMixturesHeterogenousEffects:
 
     if val_data is None:
 
-      vsize = int(vsize*x_tr.shape[0])
-      x_vl, t_vl, e_vl, a_vl = x_tr[-vsize:], t_tr[-vsize:], e_tr[-vsize:], a_tr[-vsize:]
+      # vsize = int(vsize*x_tr.shape[0])
+      # x_vl, t_vl, e_vl, a_vl = x_tr[-vsize:], t_tr[-vsize:], e_tr[-vsize:], a_tr[-vsize:]
 
-      x_tr = x_tr[:-vsize]
-      t_tr = t_tr[:-vsize]
-      e_tr = e_tr[:-vsize]
-      a_tr = a_tr[:-vsize]
+      # x_tr = x_tr[:-vsize]
+      # t_tr = t_tr[:-vsize]
+      # e_tr = e_tr[:-vsize]
+      # a_tr = a_tr[:-vsize]
+
+      vidx = _get_valid_idx(len(x_tr), vsize, random_state)
+
+      x_vl, t_vl, e_vl, a_vl = x[vidx], t[vidx], e[vidx], a[vidx]
+      x_tr, t_tr, e_tr, a_tr = x[~vidx], t[~vidx], e[~vidx], a[~vidx]
 
     else:
 
@@ -181,7 +196,7 @@ class DeepCoxMixturesHeterogenousEffects:
 
   def fit(self, x, t, e, a, vsize=0.15, val_data=None,
           iters=1, learning_rate=1e-3, batch_size=100,
-          optimizer="Adam", random_state=100):
+          optimizer="Adam", random_state=0):
 
     r"""This method is used to train an instance of the DSM model.
 
@@ -307,7 +322,7 @@ class DeepCoxMixturesHeterogenousEffects:
 
   def predict_latent_phi(self, x):
 
-    r"""Returns the estimated latent treatment effect group \( \phi \) given the confounders \( x \).
+    r"""Returns the estimated probability over latent treatment effect group \( \phi \) given the confounders \( x \).
 
     Parameters
     ----------
