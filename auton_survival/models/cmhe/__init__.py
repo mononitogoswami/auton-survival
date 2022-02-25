@@ -196,7 +196,7 @@ class DeepCoxMixturesHeterogenousEffects:
 
   def fit(self, x, t, e, a, vsize=0.15, val_data=None,
           iters=1, learning_rate=1e-3, batch_size=100,
-          optimizer="Adam", random_state=0):
+          optimizer="Adam", random_state=0, patience=2):
 
     r"""This method is used to train an instance of the DSM model.
 
@@ -248,7 +248,9 @@ class DeepCoxMixturesHeterogenousEffects:
                           epochs=iters,
                           lr=learning_rate,
                           bs=batch_size,
-                          return_losses=True)
+                          return_losses=True,
+                          patience=patience, 
+                          use_posteriors=True) # Use posteriors by default
 
     self.torch_model = (model[0].eval(), model[1])
     self.fitted = True

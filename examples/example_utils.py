@@ -4,17 +4,17 @@ import numpy as np
 from sklearn.metrics import roc_curve, roc_auc_score
 import matplotlib.pyplot as plt
 
-def predict_treatment_phenotype_proba(model, x, a):
-    """
-    Using the trained CMHE model, find the probability that an individual 
-    belongs to each treatment phenotype.
-    """
+# def predict_treatment_phenotype_proba(model, x, a):
+#     """
+#     Using the trained CMHE model, find the probability that an individual 
+#     belongs to each treatment phenotype.
+#     """
     
-    # Find the probability that an individual belongs to each treatment phenotype
-    zeta_probs = torch.exp(model.torch_model[0](
-            torch.from_numpy(x), torch.from_numpy(a))[0]).sum(dim=1).detach().numpy()
+#     # Find the probability that an individual belongs to each treatment phenotype
+#     zeta_probs = torch.exp(model.torch_model[0](
+#             torch.from_numpy(x), torch.from_numpy(a))[0]).sum(dim=1).detach().numpy()
    
-    return zeta_probs
+#     return zeta_probs
 
 def find_max_treatment_effect_phenotype(g, zeta_probs, factual_outcomes):
     """
