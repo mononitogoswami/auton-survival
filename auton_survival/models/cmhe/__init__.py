@@ -82,9 +82,6 @@ from .cmhe_torch import DeepCMHETorch
 from .cmhe_utilities import train_cmhe, predict_survival
 from .cmhe_utilities import predict_latent_phi, predict_latent_z
 
-import numpy as np
-import torch
-
 class DeepCoxMixturesHeterogenousEffects:
   """A Deep Cox Mixtures with Heterogenous Effects model.
 
