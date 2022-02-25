@@ -90,15 +90,3 @@ class DeepCMHETorch(torch.nn.Module):
         logp_joint_hrs[:, i, j] = log_hrs[:, i] + (j!=2)*a*self.omega[j]
 
     return logp_jointlatent_gate, logp_joint_hrs
-
-# class DeepCoxMixtureHETorch(CoxMixtureHETorch):
-
-#   def __init__(self, k, g, inputdim, hidden):
-
-#     super(DeepCoxMixtureHETorch, self).__init__(k, g, inputdim, hidden)
-
-#     # Get rich feature representations of the covariates
-#     self.embedding = torch.nn.Sequential(torch.nn.Linear(inputdim, hidden),
-#                                          torch.nn.Tanh(),
-#                                          torch.nn.Linear(hidden, hidden),
-#                                          torch.nn.Tanh())
