@@ -25,7 +25,6 @@ import sys
 sys.path.append(r'../')
 
 import torch
-from auton_survival.models.dsm.dsm_torch import create_representation
 
 class DeepCMHETorch(torch.nn.Module):
   """PyTorch model definition of the Cox Mixture with Hereogenous Effects Model.
@@ -58,14 +57,19 @@ class DeepCMHETorch(torch.nn.Module):
 
     self.k = k # Base Physiology groups
     self.g = g # Treatment Effect groups
-
-    if len(layers) == 0: lastdim = inputdim
-    else: lastdim = layers[-1]
-
-    self._init_dcmhe_layers(lastdim)
-
-    self.embedding = create_representation(inputdim, layers, 'Tanh')
-
+   
+    hidden = layers[0] # Won't work in CoxSubgroup
+    self.expert = torch.nn.Linear(hidden, k, bias=False)
+  
+    self.z_gate = torch.nn.Linear(hidden, k, bias=False) 
+    self.phi_gate = torch.nn.Linear(hidden, g, bias=False) 
+    self.omega = torch.nn.Parameter(torch.rand(self.g)-0.5)
+    
+    # Get rich feature representations of the covariates
+    self.embedding = torch.nn.Sequential(torch.nn.Linear(inputdim, hidden), 
+                                         torch.nn.Tanh(),
+                                         torch.nn.Linear(hidden, hidden),
+                                         torch.nn.Tanh())
 
   def forward(self, x, a):
 

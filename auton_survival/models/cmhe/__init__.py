@@ -136,45 +136,29 @@ class DeepCoxMixturesHeterogenousEffects:
     else:
       return torch.from_numpy(x).float()
 
-  def _get_valid_idx(n, size, random_seed):
+  def _get_valid_idx(self, n, size, random_state):
 
-    np.random.seed(random_seed)
+    np.random.seed(random_state)
 
     validx = sorted(np.random.choice(n, size=(int(size*n)), replace=False))
-    vidx = np.zeros(n).astype('bool')
+    vidx = torch.zeros(n, dtype=torch.bool)
     vidx[validx] = True
-
+    
     return vidx
 
   def _preprocess_training_data(self, x, t, e, a, vsize, val_data,
                                 random_state):
 
-    idx = list(range(x.shape[0]))
-
-    np.random.seed(random_state)
-    np.random.shuffle(idx)
-
-    x_tr, t_tr, e_tr, a_tr = x[idx], t[idx], e[idx], a[idx]
-
-    x_tr = torch.from_numpy(x_tr).float()
-    t_tr = torch.from_numpy(t_tr).float()
-    e_tr = torch.from_numpy(e_tr).float()
-    a_tr = torch.from_numpy(a_tr).float()
+    x_tr = torch.from_numpy(x).float()
+    t_tr = torch.from_numpy(t).float()
+    e_tr = torch.from_numpy(e).float()
+    a_tr = torch.from_numpy(a).float()
 
     if val_data is None:
+      vidx = self._get_valid_idx(len(x), vsize, random_state)
 
-      # vsize = int(vsize*x_tr.shape[0])
-      # x_vl, t_vl, e_vl, a_vl = x_tr[-vsize:], t_tr[-vsize:], e_tr[-vsize:], a_tr[-vsize:]
-
-      # x_tr = x_tr[:-vsize]
-      # t_tr = t_tr[:-vsize]
-      # e_tr = e_tr[:-vsize]
-      # a_tr = a_tr[:-vsize]
-
-      vidx = _get_valid_idx(len(x_tr), vsize, random_state)
-
-      x_vl, t_vl, e_vl, a_vl = x[vidx], t[vidx], e[vidx], a[vidx]
-      x_tr, t_tr, e_tr, a_tr = x[~vidx], t[~vidx], e[~vidx], a[~vidx]
+      x_vl, t_vl, e_vl, a_vl = x_tr[vidx], t_tr[vidx], e_tr[vidx], a_tr[vidx]
+      x_tr, t_tr, e_tr, a_tr = x_tr[~vidx], t_tr[~vidx], e_tr[~vidx], a_tr[~vidx]
 
     else:
 
