@@ -26,6 +26,7 @@ sys.path.append(r'../')
 
 import torch
 
+
 class DeepCMHETorch(torch.nn.Module):
   """PyTorch model definition of the Cox Mixture with Hereogenous Effects Model.
 
@@ -66,10 +67,12 @@ class DeepCMHETorch(torch.nn.Module):
     self.omega = torch.nn.Parameter(torch.rand(self.g)-0.5)
     
     # Get rich feature representations of the covariates
-    self.embedding = torch.nn.Sequential(torch.nn.Linear(inputdim, hidden), 
-                                         torch.nn.Tanh(),
-                                         torch.nn.Linear(hidden, hidden),
-                                         torch.nn.Tanh())
+    #self.embedding = torch.nn.Sequential(torch.nn.Linear(inputdim, hidden), 
+    #                                     torch.nn.Tanh(),
+    #                                     torch.nn.Linear(hidden, hidden),
+    #                                     torch.nn.Tanh())
+    self.embedding = create_representation(inputdim, layers=layers, 
+                                           activation='Tanh', bias=False)
 
   def forward(self, x, a):
 
