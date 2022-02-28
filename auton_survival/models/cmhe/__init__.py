@@ -261,7 +261,7 @@ class DeepCoxMixturesHeterogenousEffects:
     x: np.ndarray
         A numpy array of the input features, \( x \).
     a: np.ndarray
-        A numpy array of the treatmeant assignment, \( a \).
+        A numpy array of the treatment assignment, \( a \).
     t: list or float
         a list or float of the times at which survival probability is
         to be computed
@@ -274,7 +274,7 @@ class DeepCoxMixturesHeterogenousEffects:
                       "model using the `fit` method on some training data " +
                       "before calling `predict_survival`.")
 
-    x = self._preprocess_test_data(x, a)
+    x, a = self._preprocess_test_data(x, a)
 
     if t is not None:
       if not isinstance(t, list):
